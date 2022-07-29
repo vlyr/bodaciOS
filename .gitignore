@@ -1,0 +1,4 @@
+/target
+isofiles/boot/kernel.bin
+os.iso
+*.o
