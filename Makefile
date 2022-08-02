@@ -1,15 +1,22 @@
-arch ?= x86_64
+# kernel
+arch ?= i686
 kernel := build/kernel-$(arch).bin
 iso := build/os-$(arch).iso
-
 linker_script := kernel/arch/$(arch)/linker.ld
 grub_cfg := kernel/arch/$(arch)/grub.cfg
+
 asm_src_files := $(wildcard kernel/arch/$(arch)/*.S)
 asm_obj_files := $(patsubst kernel/arch/$(arch)/%.S, build/arch/$(arch)/%.o, $(asm_src_files))
 
+c_input_files := $(wildcard kernel/*.c)
+c_output_files := $(patsubst kernel/%.c, build/arch/$(arch)/%.o, $(c_input_files))
+
+libc_input_files := $(wildcard libc/string/*.c)
+libc_output_files := $(patsubst libc/string/%.c, build/arch/$(arch)/%.o, $(libc_input_files))
+
 .PHONY: all clean run iso kernel
 
-all: $(kernel)
+all: $(libc_output_files) $(c_output_files) $(kernel)
 
 clean:
 	@rm -r build
@@ -22,7 +29,7 @@ iso: $(iso)
 prepare:
 	@mkdir -p build/arch/$(arch)
 
-$(iso): $(kernel) $(grub_cfg) prepare
+$(iso): prepare all 
 	@mkdir -p build/isofiles/boot/grub
 	@cp $(kernel) build/isofiles/boot/kernel.bin
 	@cp $(grub_cfg) build/isofiles/boot/grub
@@ -30,12 +37,19 @@ $(iso): $(kernel) $(grub_cfg) prepare
 	@rm -r build/isofiles
 
 $(kernel): prepare kernel $(asm_obj_files) $(linker_script)
-	@i686-elf-gcc -m32 -ffreestanding -nostdlib -g -T $(linker_script) $(asm_obj_files) build/arch/$(arch)/kernel.o -o build/kernel-$(arch).bin -lgcc
+	@i686-elf-gcc -T $(linker_script) -o build/kernel-$(arch).bin $(wildcard build/arch/$(arch)/*.o) -ffreestanding -O2 -nostdlib -lgcc
 
+# assembly
 build/arch/$(arch)/%.o: kernel/arch/$(arch)/%.S
 	@mkdir -p $(shell dirname $@)
-	# @i686-elf-gcc -m32 -std=gnu99 -ffreestanding -g -c $< -o $@
 	@nasm -felf32 $< -o $@
 
-kernel: prepare
-	@i686-elf-gcc -m32 -std=gnu99 -ffreestanding -g -c kernel/arch/$(arch)/main.c -o build/arch/$(arch)/kernel.o
+# c kernel code
+$(c_output_files): $(c_input_files)
+	@i686-elf-gcc -m32 -c $< -o $@ -ffreestanding -z max-page-size=0x1000 -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -std=gnu99 -O2 -Wall -Wextra -I libc/include
+
+# libc
+$(libc_output_files): $(libc_input_files) prepare
+	@echo building lib
+	@mkdir -p $(shell dirname $@)
+	@i686-elf-gcc -MD -c $< -o $@ -std=gnu11 -ffreestanding -Wall -Wextra -Iinclude
