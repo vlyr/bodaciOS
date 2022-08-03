@@ -50,6 +50,5 @@ $(c_output_files): $(c_input_files)
 
 # libc
 $(libc_output_files): $(libc_input_files) prepare
-	@echo building lib
 	@mkdir -p $(shell dirname $@)
 	@i686-elf-gcc -MD -c $< -o $@ -std=gnu11 -ffreestanding -Wall -Wextra -Iinclude
