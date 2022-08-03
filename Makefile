@@ -1,9 +1,9 @@
 # kernel
-arch ?= i686
+arch ?= x86_64
 kernel := build/kernel-$(arch).bin
 iso := build/os-$(arch).iso
 linker_script := kernel/arch/$(arch)/linker.ld
-grub_cfg := kernel/arch/$(arch)/grub.cfg
+grub_cfg := grub.cfg
 
 asm_src_files := $(wildcard kernel/arch/$(arch)/*.S)
 asm_obj_files := $(patsubst kernel/arch/$(arch)/%.S, build/arch/$(arch)/%.o, $(asm_src_files))
@@ -37,18 +37,18 @@ $(iso): prepare all
 	@rm -r build/isofiles
 
 $(kernel): prepare kernel $(asm_obj_files) $(linker_script)
-	@i686-elf-gcc -T $(linker_script) -o build/kernel-$(arch).bin $(wildcard build/arch/$(arch)/*.o) -ffreestanding -O2 -nostdlib -lgcc
+	@x86_64-elf-ld -n -o build/kernel-$(arch).bin -T $(linker_script) $(wildcard build/arch/$(arch)/*.o)
 
 # assembly
 build/arch/$(arch)/%.o: kernel/arch/$(arch)/%.S
 	@mkdir -p $(shell dirname $@)
-	@nasm -felf32 $< -o $@
+	@nasm -felf64 $< -o $@
 
 # c kernel code
 $(c_output_files): $(c_input_files)
-	@i686-elf-gcc -m32 -c $< -o $@ -ffreestanding -z max-page-size=0x1000 -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -std=gnu99 -O2 -Wall -Wextra -I libc/include
+	@x86_64-elf-gcc -std=gnu99 -ffreestanding -g -c $< -o $@ -I libc/include
 
 # libc
 $(libc_output_files): $(libc_input_files) prepare
 	@mkdir -p $(shell dirname $@)
-	@i686-elf-gcc -MD -c $< -o $@ -std=gnu11 -ffreestanding -Wall -Wextra -Iinclude
+	@x86_64-elf-gcc -MD -c $< -o $@ -std=gnu11 -ffreestanding -Wall -Wextra -Iinclude

@@ -1,10 +1,9 @@
 #include <stdint.h>
 #include <string.h>
-#include <integer.h>
 
 uint16_t* vga_buffer;
 
-void print_char(u8 c) {
+void print_char(uint8_t c) {
     vga_buffer[8] = 0x0F21;
 }
 

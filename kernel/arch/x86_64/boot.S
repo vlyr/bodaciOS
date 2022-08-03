@@ -1,6 +1,5 @@
 global start
-; extern long_mode_start
-extern kmain
+extern long_mode_start
 
 section .text
 bits 32
@@ -8,19 +7,15 @@ bits 32
 	mov esp, stack_top
 
 	call check_multiboot
-	; call check_cpuid
-	; call check_long_mode
+	call check_cpuid
+	call check_long_mode
 
-	; call set_up_paging
-	; call enable_paging
+	call set_up_paging
+	call enable_paging
 
-	; lgdt [gdt64.pointer]
+	lgdt [gdt64.pointer]
 
-	; jmp gdt64.code:long_mode_start
-
-	mov dword [0xb8000 + 1200], 0x0F21
-
-	call kmain
+	jmp gdt64.code:long_mode_start
 
 	hlt
 
@@ -152,12 +147,12 @@ section .bss
 
     stack_top:
 
-;section .rodata
-;    gdt64:
-;	dq 0
-;    .code: equ $ - gdt64
-;	dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53)
+section .rodata
+    gdt64:
+	dq 0
+    .code: equ $ - gdt64
+	dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53)
 
-;    .pointer:
-;	dw $ - gdt64 - 1
-;	dq gdt64
+    .pointer:
+	dw $ - gdt64 - 1
+	dq gdt64
