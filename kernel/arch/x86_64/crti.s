@@ -1,4 +1,4 @@
-/* x86_64 crti.s */
+// https://wiki.osdev.org/Calling_Global_Constructors#x86_64_.2864-bit.29
 .section .init
 .global _init
 .type _init, @function

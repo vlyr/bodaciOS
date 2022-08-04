@@ -37,7 +37,7 @@ run: $(iso)
 iso: $(iso)
 
 prepare:
-	@mkdir -p $(build_dir)
+	@mkdir -p $(build_dir)/crt
 
 $(iso): prepare all 
 	@mkdir -p build/isofiles/boot/grub
@@ -47,9 +47,13 @@ $(iso): prepare all
 	@rm -r build/isofiles
 
 link:
-	@x86_64-elf-ld -n -o build/kernel-$(arch).bin -T $(linker_script) $(wildcard $(build_dir)/*.o) # $(crti_obj) $(crtibegin_obj) $(wildcard $(build_dir)/*.o) $(crtend_obj) $(crtn_obj)
+	@x86_64-elf-ld -n -o build/kernel-$(arch).bin -T $(linker_script) $(build_dir)/crt/crti.o \
+		$(crtibegin_obj) \
+		$(wildcard $(build_dir)/*.o) \
+		$(crtend_obj) \
+		$(build_dir)/crt/crtn.o
 
-kernel: prepare $(asm_output_files) $(c_output_files) $(libc_output_files) $(linker_script)
+kernel: prepare $(asm_output_files) $(c_output_files) $(libc_output_files) $(linker_script) crt
 	@$(cc) $(cflags) kernel/kernel.c -o $(build_dir)/kernel.o -I libc/include -I kernel/core/include
 
 # assembly
@@ -60,6 +64,10 @@ $(build_dir)/%.o: kernel/arch/$(arch)/%.S
 # c kernel code
 $(build_dir)/%.o: $(c_input_files)
 	@$(cc) -std=gnu99 -ffreestanding -g -c $< -o $(build_dir)/$(notdir $@) -I libc/include -I kernel/core/include
+
+crt:
+	@$(cc) -std=gnu99 --freestanding -g -c kernel/arch/$(arch)/crti.s -o $(build_dir)/crt/crti.o
+	@$(cc) -std=gnu99 --freestanding -g -c kernel/arch/$(arch)/crtn.s -o $(build_dir)/crt/crtn.o
 
 # libc
 $(libc_output_files): $(libc_input_files) prepare
