@@ -2,11 +2,10 @@
 #include <string.h>
 #include "core/include/vga.h"
 
-void print_char(uint8_t c) {
-}
 
 void kmain() {
-    print_char('!');
-
     vga_initialize();
+
+    vga_color_t color = vga_entry_color(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLACK);
+    vga_print("Hello, world!", color);
 }
