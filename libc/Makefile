@@ -1,3 +1,4 @@
+# kernel
 arch ?= x86_64
 kernel := build/kernel-$(arch).bin
 iso := build/os-$(arch).iso
@@ -7,15 +8,12 @@ grub_cfg := grub.cfg
 asm_input_files := $(wildcard kernel/arch/$(arch)/*.S)
 asm_output_files := $(patsubst kernel/arch/$(arch)/%.S, build/arch/$(arch)/%.o, $(asm_input_files))
 
-c_input_files := $(wildcard kernel/core/*/*.c)
-c_output_files := $(c_input_files:kernel/%.c=build/arch/$(arch)/%.o)
-
 libc_input_files := $(wildcard libc/string/*.c)
 libc_output_files := $(patsubst libc/string/%.c, build/arch/$(arch)/%.o, $(libc_input_files))
 
 .PHONY: all clean run iso kernel
 
-all: $(libc_output_files) $(c_output_files) kernel link
+all: $(libc_output_files) $(c_output_files) $(kernel)
 
 clean:
 	@rm -r build
@@ -35,20 +33,17 @@ $(iso): prepare all
 	@grub-mkrescue -o $(iso) build/isofiles 2> /dev/null
 	@rm -r build/isofiles
 
-link: prepare $(asm_output_files) $(linker_script)
+$(kernel): prepare kernel $(asm_input_files) $(linker_script)
 	@x86_64-elf-ld -n -o build/kernel-$(arch).bin -T $(linker_script) $(wildcard build/arch/$(arch)/*.o)
 
-kernel:
-	@x86_64-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/kernel.c -o build/arch/$(arch)/kernel.o -I libc/include -I kernel/core/include
-
 # assembly
-build/arch/$(arch)/%.o: kernel/arch/$(arch)/%.S
+$(asm_input_files): $(asm_output_files)
 	@mkdir -p $(shell dirname $@)
 	@nasm -felf64 $< -o $@
 
 # c kernel code
-build/arch/$(arch)/%.o: $(c_input_files)
-	@x86_64-elf-gcc -std=gnu99 -ffreestanding -g -c $< -o build/arch/$(arch)/$(notdir $@) -I libc/include -I kernel/core/include
+build/arch/$(arch)/%.o: kernel/kernel.c
+	@x86_64-elf-gcc -std=gnu99 -ffreestanding -g -c $< -o $@ -I libc/include
 
 # libc
 $(libc_output_files): $(libc_input_files) prepare
