@@ -8,9 +8,6 @@ typedef uint16_t vga_entry_t;
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 static uint16_t* const VGA_BUFFER = (uint16_t*) 0xb8000;
-void vga_initialize();
-void vga_print(const char* string, vga_color_t color);
-void vga_print_char(vga_entry_t c);
 
 // https://wiki.osdev.org/Meaty_Skeleton
 enum vga_color {
@@ -31,11 +28,16 @@ enum vga_color {
     VGA_COLOR_LIGHT_BROWN = 14,
     VGA_COLOR_WHITE = 15,
 };
- 
+
 static inline vga_color_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
     return fg | bg << 4;
 }
- 
+
 static inline vga_entry_t vga_entry(unsigned char c, vga_color_t color) {
     return (uint16_t) c | (uint16_t) color << 8;
 }
+
+void vga_initialize();
+void vga_print_char(vga_entry_t c);
+void vga_print(const char* string, vga_color_t color);
+void vga_printf(const char* format, ...);

@@ -2,7 +2,6 @@
 #include <string.h>
 #include "core/include/vga.h"
 
-
 void kmain() {
     vga_initialize();
 
