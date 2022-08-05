@@ -3,6 +3,7 @@
 ## Usage
 
 ### Dependencies
+* GNU Make
 * QEMU
 * Cross-compiled GCC for your intended target (`x86_64-elf-gcc` or `i686-elf-gcc`, for example). Arch Linux users can download a cross-compiled GCC from the [AUR](https://aur.archlinux.org/packages?K=elf-gcc).
 
