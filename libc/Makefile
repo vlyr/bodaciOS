@@ -11,12 +11,9 @@ clean:
 	@rm -r ../build
 
 prepare:
-	@echo libc input: $(libc_input_files)
-	@echo libc output: $(libc_output_files)
 	@mkdir -p $(build_dir)
 
 # libc
 %.o: %.c prepare
 	@mkdir -p $(shell dirname $@)
-	@echo $<
-	$(cc) -MD -c $< -o $(build_dir)/$(notdir $@) -std=gnu11 -ffreestanding -Wall -Wextra -Iinclude
+	@$(cc) -MD -c $< -o $(build_dir)/$(notdir $@) -std=gnu11 -ffreestanding -Wall -Wextra -Iinclude
