@@ -4,10 +4,14 @@
 #include <vga.h>
 #include <limits.h>
 #include <stdbool.h>
-#include <fmt.h>
 
 size_t vga_row;
 size_t vga_col;
+
+enum fmt_state {
+    FMT_STATE_ESCAPE,
+    FMT_STATE_REGULAR,
+};
 
 void vga_initialize() {
     vga_row = 0;
@@ -24,15 +28,23 @@ void vga_initialize() {
     }
 }
 
-void vga_print_char(vga_entry_t c) {
+void vga_print_char(unsigned char c, vga_color_t color) {
     if (vga_col + 1 > VGA_WIDTH) {
         vga_col = 0;
         vga_row += 1;
     }
 
+    // Check for special characters
+    if (c == '\n') {
+        vga_row++;
+        vga_col = 0;
+        return;
+    }
+
+    vga_entry_t entry = vga_entry(c, color);
     size_t index = (VGA_WIDTH * vga_row) + vga_col;
 
-    VGA_BUFFER[index] = c;
+    VGA_BUFFER[index] = entry;
 
     vga_col += 1;
 }
@@ -41,15 +53,72 @@ void vga_print(const char* string) {
     for (size_t i = 0; i < strlen(string); i++) {
         uint8_t c = string[i];
 
-        vga_entry_t entry = vga_entry(c, vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK));
+        vga_color_t color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 
-        vga_print_char(entry);
+        vga_print_char(c, color);
     }
 }
 
-void vga_printf(const char* restrict format, ...) {
-    va_list args;
-    va_start(args, format);
+static void _vga_vprintf(const char* string, va_list args) {
+    char current;
+    size_t idx = 0;
 
-    vga_print(fmt(format, args));
+    vga_color_t color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+
+    enum fmt_state state = FMT_STATE_REGULAR;
+
+    while ((current = string[idx])) {
+        switch (state) {
+        case FMT_STATE_REGULAR: {
+            if (current == '%') {
+                state = FMT_STATE_ESCAPE;
+            } else {
+                vga_print_char(current, color);
+            }
+            break;
+        }
+
+        case FMT_STATE_ESCAPE: {
+            switch (current) {
+            case 'c': {
+                char c = va_arg(args, int);
+                vga_print_char(c, color);
+                break;
+            }
+
+            case 's': {
+                char* s = va_arg(args, char*);
+
+                while (*s) {
+                    vga_print_char(*s++, color);
+                }
+
+                break;
+            }
+
+            case 'd': {
+                int i = va_arg(args, int);
+
+                char* buffer = "";
+                char* new = fmt_int(i, buffer, 10);
+
+                while (*new) {
+                    vga_print_char(*new ++, color);
+                }
+            }
+            }
+
+            state = FMT_STATE_REGULAR;
+        }
+        }
+
+        idx++;
+    }
+}
+
+void vga_printf(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    _vga_vprintf(fmt, args);
 }

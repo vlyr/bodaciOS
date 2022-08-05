@@ -4,7 +4,8 @@
 
 void kmain() {
     vga_initialize();
-    strlen("123");
 
-    vga_printf("Hello, world %c", 246);
+    vga_printf("printf string test | %s\n", "test string");
+    vga_printf("printf char test | %c\n", 'h');
+    vga_printf("printf integer test | %d\n", 123);
 }
