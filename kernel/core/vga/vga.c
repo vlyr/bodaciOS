@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include "../include/vga.h"
+#include <vga.h>
 #include <string.h>
 
 size_t vga_row;

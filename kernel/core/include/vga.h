@@ -1,5 +1,4 @@
 #pragma once
-
 #include <stdint.h>
 #include <stddef.h>
 
@@ -9,7 +8,6 @@ typedef uint16_t vga_entry_t;
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 static uint16_t* const VGA_BUFFER = (uint16_t*) 0xb8000;
-
 void vga_initialize();
 void vga_print(const char* string, vga_color_t color);
 void vga_print_char(vga_entry_t c);
