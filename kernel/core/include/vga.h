@@ -39,5 +39,5 @@ static inline vga_entry_t vga_entry(unsigned char c, vga_color_t color) {
 
 void vga_initialize();
 void vga_print_char(vga_entry_t c);
-void vga_print(const char* string, vga_color_t color);
+void vga_print(const char* string);
 void vga_printf(const char* format, ...);

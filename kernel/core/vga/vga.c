@@ -2,6 +2,9 @@
 #include <stddef.h>
 #include <string.h>
 #include <vga.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <fmt.h>
 
 size_t vga_row;
 size_t vga_col;
@@ -34,13 +37,19 @@ void vga_print_char(vga_entry_t c) {
     vga_col += 1;
 }
 
-void vga_print(const char* string, vga_color_t color) {
+void vga_print(const char* string) {
     for (size_t i = 0; i < strlen(string); i++) {
         uint8_t c = string[i];
 
-        vga_entry_t entry = vga_entry(c, color);
+        vga_entry_t entry = vga_entry(c, vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK));
 
         vga_print_char(entry);
     }
 }
 
+void vga_printf(const char* restrict format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    vga_print(fmt(format, args));
+}
