@@ -1,4 +1,5 @@
 # TODO
+- [ ] Formatted printing
 - [ ] Move VGA cursor
 - [ ] IDT
 - [ ] Keyboard input
