@@ -5,15 +5,18 @@
 ### Dependencies
 * GNU Make
 * QEMU
-* Cross-compiled GCC for your intended target (`x86_64-elf-gcc` or `i686-elf-gcc`, for example). Arch Linux users can download a cross-compiled GCC from the [AUR](https://aur.archlinux.org/packages?K=elf-gcc).
+* Cross-compiled GCC for your intended target (`x86_64-elf-gcc` or `i686-elf-gcc`, for example).
 
 ### Building and Running
+**NOTE: The only supported targets as of now are `i686` and `x86_64`.**
 
-NOTE: The only supported targets as of now are `i686` and `x86_64`.
+ Arch Linux users can download a cross-compiled GCC from the [AUR](https://aur.archlinux.org/packages?K=elf-gcc).
+
+
 ```
 git clone https://github.com/vlyr/bodaciOS
 cd bodaciOS
 
-# `make run` Builds the kernel, creates an ISO file and runs it via `qemu-system-x86_64`.
-make run
+# ./run.sh Builds the kernel, creates an ISO file and runs it via `qemu-system-x86_64`.
+./build.sh
 ```
