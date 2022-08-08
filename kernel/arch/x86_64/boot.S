@@ -5,6 +5,7 @@ section .text
 bits 32
     start:
         mov esp, stack_top
+        mov edi, ebx
 
         call check_multiboot
         call check_cpuid
@@ -143,7 +144,7 @@ section .bss
         resb 4096
 
     stack_bottom:
-        resb 4096
+        resb 4096 * 4
 
     stack_top:
 

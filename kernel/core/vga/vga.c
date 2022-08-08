@@ -59,6 +59,7 @@ void vga_print(const char* string) {
     }
 }
 
+// TODO: %x and %p
 static void _vga_vprintf(const char* string, va_list args) {
     char current;
     size_t idx = 0;
@@ -97,7 +98,7 @@ static void _vga_vprintf(const char* string, va_list args) {
             }
 
             case 'd': {
-                int i = va_arg(args, int);
+                long long i = va_arg(args, long long);
 
                 char* buffer = "";
                 char* new = fmt_int(i, buffer, 10);
@@ -105,6 +106,8 @@ static void _vga_vprintf(const char* string, va_list args) {
                 while (*new) {
                     vga_print_char(*new ++, color);
                 }
+
+                break;
             }
             }
 

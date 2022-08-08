@@ -71,7 +71,7 @@ void strrev(char* arr, int start, int end) {
     strrev(arr, start, end);
 }
 
-char* fmt_int(int number, char* arr, int base) {
+char* fmt_int(long long number, char* arr, int base) {
     int i = 0, r, negative = 0;
 
     if (number == 0) {
