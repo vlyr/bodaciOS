@@ -1,4 +1,5 @@
 #pragma once
+#include <stdarg.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -29,6 +30,8 @@ enum vga_color {
     VGA_COLOR_WHITE = 15,
 };
 
+static const vga_color_t VGA_DEFAULT_COLOR = VGA_COLOR_WHITE | VGA_COLOR_BLACK << 4;
+
 static inline vga_color_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
     return fg | bg << 4;
 }
@@ -39,5 +42,6 @@ static inline vga_entry_t vga_entry(unsigned char c, vga_color_t color) {
 
 void vga_initialize();
 void vga_print_char(unsigned char c, vga_color_t color);
-void vga_print(const char* string);
+void vga_print(vga_color_t color, const char* string);
 void vga_printf(const char* format, ...);
+void vga_vprintf(vga_color_t color, const char* format, va_list args);

@@ -49,22 +49,18 @@ void vga_print_char(unsigned char c, vga_color_t color) {
     vga_col += 1;
 }
 
-void vga_print(const char* string) {
+void vga_print(vga_color_t color, const char* string) {
     for (size_t i = 0; i < strlen(string); i++) {
         uint8_t c = string[i];
-
-        vga_color_t color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 
         vga_print_char(c, color);
     }
 }
 
 // TODO: %x and %p
-static void _vga_vprintf(const char* string, va_list args) {
+void vga_vprintf(vga_color_t color, const char* string, va_list args) {
     char current;
     size_t idx = 0;
-
-    vga_color_t color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 
     enum fmt_state state = FMT_STATE_REGULAR;
 
@@ -123,5 +119,7 @@ void vga_printf(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
 
-    _vga_vprintf(fmt, args);
+    vga_color_t color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+
+    vga_vprintf(color, fmt, args);
 }
