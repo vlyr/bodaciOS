@@ -33,6 +33,7 @@ void kmain(uint64_t* multiboot_information) {
 
     klog(LOG_MESSAGE_ERROR, "Error message test\n");
     klog(LOG_MESSAGE_WARN, "Warning message test\n");
+    klog(LOG_MESSAGE_DEBUG, "Hex test: %x\n", 0x2F);
 
     print_multiboot_information(multiboot_information);
 }

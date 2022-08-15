@@ -105,6 +105,18 @@ void vga_vprintf(vga_color_t color, const char* string, va_list args) {
 
                 break;
             }
+            case 'x': {
+                long long i = va_arg(args, long long);
+                char* buffer = "";
+                char* new = fmt_int(i, buffer, 16);
+
+                vga_print_char('0', color);
+                vga_print_char('x', color);
+
+                while (*new) {
+                    vga_print_char(*new ++, color);
+                }
+            }
             }
 
             state = FMT_STATE_REGULAR;
