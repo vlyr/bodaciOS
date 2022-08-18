@@ -1,7 +1,9 @@
 # TODO
 - [ ] Move VGA cursor
 - [ ] IDT
-- [ ] Keyboard input | Translate raw key data to ASCII characters
+- [ ] Keyboard driver | Support for special characters and other keyboard keys
+- [ ] Keyboard driver | Key combinations (track which keys are currently pressed down)
 
-- [x] Call global constructors
+- [x] Keyboard driver | Translate raw key data to ASCII characters
 - [x] Formatted printing
+- [x] Call global constructors
