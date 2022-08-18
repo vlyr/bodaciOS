@@ -20,3 +20,6 @@ cd bodaciOS
 # ./run.sh Builds the kernel, creates an ISO file and runs it via `qemu-system-x86_64`.
 ./build.sh
 ```
+
+## Preview
+![Preview](media/preview.png?raw=true "Preview")
