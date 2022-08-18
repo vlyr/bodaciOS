@@ -32,14 +32,17 @@ void print_multiboot_information(uint64_t* multiboot_information) {
 void kmain(uint64_t* multiboot_information) {
     vga_initialize();
 
-    klog(LOG_MESSAGE_ERROR, "Error message test\n");
-    klog(LOG_MESSAGE_WARN, "Warning message test\n");
+    klog(LOG_MESSAGE_ERROR, "error message test\n");
+    klog(LOG_MESSAGE_WARN, "warning message test\n");
 
     print_multiboot_information(multiboot_information);
 
     for (int i = 0; i < 10; i++) {
-        uint8_t data = get_scancode();
-        klog(LOG_MESSAGE_DEBUG, "Keyboard driver event: %x\n", data);
+        keyboard_keycode data = keyboard_get_key();
+
+        if (data < 0x80) {
+            klog(LOG_MESSAGE_DEBUG, "keyboard key press: %c (raw: %x)\n", data, data);
+        }
     }
 }
 
