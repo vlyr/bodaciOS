@@ -1,7 +1,7 @@
 # TODO
-- [ ] Formatted printing
 - [ ] Move VGA cursor
 - [ ] IDT
-- [ ] Keyboard input
+- [ ] Keyboard input | Translate raw key data to ASCII characters
 
 - [x] Call global constructors
+- [x] Formatted printing
