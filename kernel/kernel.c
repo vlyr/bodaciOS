@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <common.h>
 #include <vga.h>
+#include <keyboard.h>
 
 void print_multiboot_information(uint64_t* multiboot_information) {
     klog(LOG_MESSAGE_DEBUG, "mbi size | %d\n", *multiboot_information);
@@ -33,8 +34,12 @@ void kmain(uint64_t* multiboot_information) {
 
     klog(LOG_MESSAGE_ERROR, "Error message test\n");
     klog(LOG_MESSAGE_WARN, "Warning message test\n");
-    klog(LOG_MESSAGE_DEBUG, "Hex test: %x\n", 0x2F);
 
     print_multiboot_information(multiboot_information);
+
+    for (int i = 0; i < 10; i++) {
+        uint8_t data = get_scancode();
+        klog(LOG_MESSAGE_DEBUG, "Keyboard driver event: %x\n", data);
+    }
 }
 
