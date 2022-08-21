@@ -255,7 +255,9 @@ keyboard_keycode keyboard_get_keycode() {
 keyboard_keycode keyboard_get_key() {
     keyboard_keycode kc;
 
-    while ((kc = keyboard_get_keycode()) <= 0x127) {
-        return kc;
+    for (;;) {
+        if ((kc = keyboard_get_keycode()) <= 0x127) {
+            return kc;
+        }
     }
 }

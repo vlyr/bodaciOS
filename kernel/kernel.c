@@ -29,6 +29,7 @@ void print_multiboot_information(uint64_t* multiboot_information) {
                  (multiboot_uint8_t*) mmap < (multiboot_uint8_t*) t + t->size;
                  mmap = (multiboot_memory_map_t*) ((unsigned long) mmap +
                                                    ((struct multiboot_tag_mmap*) t)->entry_size))
+
                 klog(LOG_MESSAGE_DEBUG, "base_addr = 0x%x%x | length = 0x%x%x, type = %x\n",
                      (unsigned) (mmap->addr >> 32), (unsigned) (mmap->addr & 0xffffffff),
                      (unsigned) (mmap->len >> 32), (unsigned) (mmap->len & 0xffffffff),
@@ -49,12 +50,29 @@ void kmain(uint64_t* multiboot_information) {
     klog(LOG_MESSAGE_WARN, "warning message test\n");
     print_multiboot_information(multiboot_information);
 
-    keyboard_keycode kb_data;
+    char cmd_buffer[128] = "";
+    size_t cmd_buffer_idx;
 
-    while ((kb_data = keyboard_get_key()) != KEYBOARD_KEY_INVALID) {
+    // Enter shell loop
+    for (;;) {
+        keyboard_keycode keycode = keyboard_get_key();
 
-        if (kb_data < 0x80) {
-            klog(LOG_MESSAGE_DEBUG, "keyboard key press: %c (raw: %x)\n", kb_data, kb_data);
+        if (keycode < 0x80) {
+            if (keycode == KEYBOARD_KEY_ENTER_PRESSED) {
+                vga_newline();
+
+                if (!strcmp(cmd_buffer, "pwd")) {
+                    vga_printf("Current directory");
+                }
+
+                vga_newline();
+                continue;
+            }
+
+            cmd_buffer[cmd_buffer_idx] = keycode;
+            cmd_buffer_idx++;
+
+            vga_printf("%c", keycode);
         }
     }
 }

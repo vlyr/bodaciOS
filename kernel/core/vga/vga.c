@@ -28,6 +28,11 @@ void vga_initialize() {
     }
 }
 
+void vga_newline() {
+    vga_row++;
+    vga_col = 0;
+}
+
 void vga_print_char(unsigned char c, vga_color_t color) {
     if (vga_col + 1 > VGA_WIDTH) {
         vga_col = 0;
@@ -36,8 +41,7 @@ void vga_print_char(unsigned char c, vga_color_t color) {
 
     // Check for special characters
     if (c == '\n') {
-        vga_row++;
-        vga_col = 0;
+        vga_newline();
         return;
     }
 

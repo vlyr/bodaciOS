@@ -9,6 +9,7 @@ enum log_message_type {
     LOG_MESSAGE_ERROR,
 };
 
+#include <stdint.h>
 __attribute__((noreturn)) void panic(const char* message);
 
 void klog(enum log_message_type type, const char* msg, ...);

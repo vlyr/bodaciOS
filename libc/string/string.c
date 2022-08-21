@@ -71,6 +71,30 @@ void strrev(char* arr, int start, int end) {
     strrev(arr, start, end);
 }
 
+int strcmp(const char* s1, const char* s2) {
+    size_t idx = 0;
+
+    if (strlen(s2) > strlen(s1)) {
+        while (s1[idx]) {
+            if (s1[idx] != s2[idx]) {
+                return 1;
+            }
+            idx++;
+        }
+
+        return 0;
+    } else {
+        while (s2[idx]) {
+            if (s1[idx] != s2[idx]) {
+                return 1;
+            }
+            idx++;
+        }
+
+        return 0;
+    }
+}
+
 char* fmt_int(long long number, char* arr, int base) {
     int i = 0, r, negative = 0;
 
