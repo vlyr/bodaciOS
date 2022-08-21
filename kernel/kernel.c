@@ -5,7 +5,6 @@
 #include <common.h>
 #include <vga.h>
 #include <keyboard.h>
-#include <mem.h>
 
 void print_multiboot_information(uint64_t* multiboot_information) {
     // klog(LOG_MESSAGE_DEBUG, "mbi size | %d\n", *multiboot_information);
