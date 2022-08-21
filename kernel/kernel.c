@@ -5,6 +5,7 @@
 #include <common.h>
 #include <vga.h>
 #include <keyboard.h>
+#include <mem.h>
 
 void print_multiboot_information(uint64_t* multiboot_information) {
     // klog(LOG_MESSAGE_DEBUG, "mbi size | %d\n", *multiboot_information);
@@ -62,10 +63,14 @@ void kmain(uint64_t* multiboot_information) {
                 vga_newline();
 
                 if (!strcmp(cmd_buffer, "pwd")) {
-                    vga_printf("Current directory");
+                    vga_printf("current directory\n");
                 }
 
-                vga_newline();
+                klog(LOG_MESSAGE_DEBUG, "command buffer | %s\n", cmd_buffer);
+
+                memset(cmd_buffer, 0x0, 128);
+                cmd_buffer_idx = 0;
+
                 continue;
             }
 
