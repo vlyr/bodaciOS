@@ -30,9 +30,9 @@ void print_multiboot_information(uint64_t* multiboot_information) {
                  mmap = (multiboot_memory_map_t*) ((unsigned long) mmap +
                                                    ((struct multiboot_tag_mmap*) t)->entry_size))
 
-                klog(LOG_MESSAGE_DEBUG, "base_addr = 0x%x%x | length = 0x%x%x, type = %x\n",
+                klog(LOG_MESSAGE_DEBUG, "base_addr = 0x%x%x | length = %dKB, type = %d\n",
                      (unsigned) (mmap->addr >> 32), (unsigned) (mmap->addr & 0xffffffff),
-                     (unsigned) (mmap->len >> 32), (unsigned) (mmap->len & 0xffffffff),
+                     ((unsigned) (mmap->len >> 32) + (unsigned) (mmap->len & 0xffffffff)) / 1024,
                      (unsigned) mmap->type);
             break;
         }
