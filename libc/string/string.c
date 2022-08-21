@@ -1,6 +1,7 @@
 #include "../include/string.h"
 #include <stddef.h>
 
+// Copy the contents of `src` to `dest`
 char* strcpy(const char* src, char* dest) {
     if (src == NULL || dest == NULL)
         return NULL;
@@ -13,6 +14,7 @@ char* strcpy(const char* src, char* dest) {
     return tmp;
 };
 
+// Return the length of `str`
 size_t strlen(const char* str) {
     if (str == NULL)
         return 0;
@@ -25,6 +27,7 @@ size_t strlen(const char* str) {
     return len;
 }
 
+// Concatenate `s2` to `s1`
 char* strcat(char* s1, const char* s2) {
     if (s1 == NULL || s2 == NULL)
         return NULL;
@@ -56,19 +59,20 @@ char* strncat(char* dest, const char* src, size_t sz) {
 }
 
 // https://www.codevscolor.com/c-itoa-function
-void strrev(char* arr, int start, int end) {
+// Reverse a string.
+void strrev(char* buffer, int start, int end) {
     char temp;
 
     if (start >= end)
         return;
 
-    temp = *(arr + start);
-    *(arr + start) = *(arr + end);
-    *(arr + end) = temp;
+    temp = *(buffer + start);
+    *(buffer + start) = *(buffer + end);
+    *(buffer + end) = temp;
 
     start++;
     end--;
-    strrev(arr, start, end);
+    strrev(buffer, start, end);
 }
 
 int strcmp(const char* s1, const char* s2) {
@@ -95,13 +99,15 @@ int strcmp(const char* s1, const char* s2) {
     }
 }
 
-char* fmt_int(long long number, char* arr, int base) {
+// Equivalent of `itoa` in the standard C library - convert an integer with a base of `base` to a
+// string and put the result in `buffer`.
+char* fmt_int(long long number, char* buffer, int base) {
     int i = 0, r, negative = 0;
 
     if (number == 0) {
-        arr[i] = '0';
-        arr[i + 1] = '\0';
-        return arr;
+        buffer[i] = '0';
+        buffer[i + 1] = '\0';
+        return buffer;
     }
 
     if (number < 0 && base == 10) {
@@ -111,20 +117,20 @@ char* fmt_int(long long number, char* arr, int base) {
 
     while (number != 0) {
         r = number % base;
-        arr[i] = (r > 9) ? (r - 10) + 'a' : r + '0';
+        buffer[i] = (r > 9) ? (r - 10) + 'a' : r + '0';
         i++;
         number /= base;
     }
 
     if (negative) {
-        arr[i] = '-';
+        buffer[i] = '-';
         i++;
     }
 
-    strrev(arr, 0, i - 1);
+    strrev(buffer, 0, i - 1);
 
-    arr[i] = '\0';
+    buffer[i] = '\0';
 
-    return arr;
+    return buffer;
 }
 

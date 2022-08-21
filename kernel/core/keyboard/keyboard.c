@@ -232,6 +232,7 @@ static const enum keyboard_keycode us_qwerty_keycodes[0xE0] = {
     KEYBOARD_KEY_INVALID,                // 0xDF
 };
 
+// Read port 0x60 for raw scancode data
 uint8_t keyboard_get_scancode() {
     while (!(inb(0x64) & 1))
         asm volatile("pause");
@@ -240,6 +241,7 @@ uint8_t keyboard_get_scancode() {
 }
 
 // FIXME: Only supports basic keys
+// Convert scancode from `keyboard_get_scancode` to a `keyboard_keycode`
 keyboard_keycode keyboard_get_keycode() {
     keyboard_keycode kc;
 
@@ -252,6 +254,7 @@ keyboard_keycode keyboard_get_keycode() {
     return KEYBOARD_KEY_INVALID;
 }
 
+// Calls `keyboard_get_keycode` and checks the validity of the returned data
 keyboard_keycode keyboard_get_key() {
     keyboard_keycode kc;
 

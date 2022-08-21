@@ -5,8 +5,8 @@
 #include <limits.h>
 #include <stdbool.h>
 
-size_t vga_row;
-size_t vga_col;
+static size_t vga_row;
+static size_t vga_col;
 
 enum fmt_state {
     FMT_STATE_ESCAPE,
@@ -28,6 +28,7 @@ void vga_initialize() {
     }
 }
 
+// Increment `vga_row` and set `vga_col` to 0.
 void vga_newline() {
     vga_row++;
     vga_col = 0;
@@ -46,13 +47,14 @@ void vga_print_char(unsigned char c, vga_color_t color) {
     }
 
     vga_entry_t entry = vga_entry(c, color);
-    size_t index = (VGA_WIDTH * vga_row) + vga_col;
+    size_t index = VGA_WIDTH * vga_row + vga_col;
 
     VGA_BUFFER[index] = entry;
 
     vga_col += 1;
 }
 
+// Iterate over the characters in `string` and call `vga_print_char` on each one of them
 void vga_print(vga_color_t color, const char* string) {
     for (size_t i = 0; i < strlen(string); i++) {
         uint8_t c = string[i];
@@ -61,7 +63,7 @@ void vga_print(vga_color_t color, const char* string) {
     }
 }
 
-// TODO: %x and %p
+// TODO: %p
 void vga_vprintf(vga_color_t color, const char* string, va_list args) {
     char current;
     size_t idx = 0;
@@ -128,6 +130,7 @@ void vga_vprintf(vga_color_t color, const char* string, va_list args) {
     }
 }
 
+// Print formatted string `fmt` to the VGA buffer
 void vga_printf(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
