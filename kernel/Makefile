@@ -57,5 +57,5 @@ $(build_dir)/%.o: %.c
 	@$(cc) -std=gnu99 -ffreestanding -g -c $< -o $(build_dir)/$(notdir $@) -I ../libc/include -I core/include
 
 crt:
-	@$(cc) -std=gnu99 --freestanding -g -c arch/$(arch)/crti.s -o $(build_dir)/crt/crti.o
+	@$(cc) -std=gnu99 -ffreestanding -g -c arch/$(arch)/crti.s -o $(build_dir)/crt/crti.o
 	@$(cc) -std=gnu99 --freestanding -g -c arch/$(arch)/crtn.s -o $(build_dir)/crt/crtn.o
