@@ -5,6 +5,7 @@
 #include <common.h>
 #include <vga.h>
 #include <keyboard.h>
+#include <mem.h>
 
 void print_multiboot_information(uint64_t* multiboot_information) {
     // klog(LOG_MESSAGE_DEBUG, "mbi size | %d\n", *multiboot_information);
@@ -18,6 +19,19 @@ void print_multiboot_information(uint64_t* multiboot_information) {
         switch (t->type) {
         case MULTIBOOT_TAG_TYPE_BASIC_MEMINFO: {
             pmm_init(0x0100000, ((struct multiboot_tag_basic_meminfo*) t)->mem_upper);
+            break;
+        }
+
+        case MULTIBOOT_TAG_TYPE_MMAP: {
+            multiboot_memory_map_t* mmap;
+
+            for (mmap = ((struct multiboot_tag_mmap*) t)->entries;
+                 (multiboot_uint8_t*) mmap < (multiboot_uint8_t*) t + t->size;
+                 mmap = (multiboot_memory_map_t*) ((unsigned long) mmap +
+                                                   ((struct multiboot_tag_mmap*) t)->entry_size))
+                if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
+                    pmm_init_region(mmap->addr, mmap->len / 1024);
+                }
 
             break;
         }

@@ -119,6 +119,8 @@ void vga_vprintf(vga_color_t color, const char* string, va_list args) {
                 while (*new) {
                     vga_print_char(*new ++, color);
                 }
+
+                break;
             }
             }
 
