@@ -243,8 +243,6 @@ uint8_t keyboard_get_scancode() {
 // FIXME: Only supports basic keys
 // Convert scancode from `keyboard_get_scancode` to a `keyboard_keycode`
 keyboard_keycode keyboard_get_keycode() {
-    keyboard_keycode kc;
-
     uint8_t scancode = keyboard_get_scancode();
 
     if (scancode < 0xE0) {

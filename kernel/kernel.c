@@ -17,23 +17,8 @@ void print_multiboot_information(uint64_t* multiboot_information) {
 
         switch (t->type) {
         case MULTIBOOT_TAG_TYPE_BASIC_MEMINFO: {
-            klog(LOG_MESSAGE_DEBUG, "mem_lower: %dKB\n",
-                 ((struct multiboot_tag_basic_meminfo*) t)->mem_lower);
-            klog(LOG_MESSAGE_DEBUG, "mem_upper: %dKB\n",
-                 ((struct multiboot_tag_basic_meminfo*) t)->mem_upper);
-        }
-        case MULTIBOOT_TAG_TYPE_MMAP: {
-            multiboot_memory_map_t* mmap;
+            pmm_init(0x0100000, ((struct multiboot_tag_basic_meminfo*) t)->mem_upper);
 
-            for (mmap = ((struct multiboot_tag_mmap*) t)->entries;
-                 (multiboot_uint8_t*) mmap < (multiboot_uint8_t*) t + t->size;
-                 mmap = (multiboot_memory_map_t*) ((unsigned long) mmap +
-                                                   ((struct multiboot_tag_mmap*) t)->entry_size))
-
-                klog(LOG_MESSAGE_DEBUG, "base_addr = 0x%x%x | length = %dKB, type = %d\n",
-                     (unsigned) (mmap->addr >> 32), (unsigned) (mmap->addr & 0xffffffff),
-                     ((unsigned) (mmap->len >> 32) + (unsigned) (mmap->len & 0xffffffff)) / 1024,
-                     (unsigned) mmap->type);
             break;
         }
         }

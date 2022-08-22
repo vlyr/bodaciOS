@@ -6,8 +6,6 @@ void klog(enum log_message_type type, const char* msg, ...) {
     va_list args;
     va_start(args, msg);
 
-    vga_color_t default_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-
     switch (type) {
     case LOG_MESSAGE_DEBUG: {
         vga_color_t color = vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLACK);
