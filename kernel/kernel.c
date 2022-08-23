@@ -14,11 +14,8 @@ void print_multiboot_information(uint64_t* multiboot_information) {
     struct multiboot_tag* t = (struct multiboot_tag*) (multiboot_information + offset);
 
     while (t->type != MULTIBOOT_TAG_TYPE_END) {
-        klog(LOG_MESSAGE_DEBUG, "multiboot tag | size: %d, type: %d\n", t->size, t->type);
-
         switch (t->type) {
         case MULTIBOOT_TAG_TYPE_BASIC_MEMINFO: {
-            pmm_init(0x0100000, ((struct multiboot_tag_basic_meminfo*) t)->mem_upper);
             break;
         }
 
@@ -30,7 +27,10 @@ void print_multiboot_information(uint64_t* multiboot_information) {
                  mmap = (multiboot_memory_map_t*) ((unsigned long) mmap +
                                                    ((struct multiboot_tag_mmap*) t)->entry_size))
                 if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
-                    pmm_init_region(mmap->addr, mmap->len / 1024);
+                    klog(LOG_MESSAGE_DEBUG,
+                         "memory region from multiboot struct: addr = %x, len = %d\n", mmap->addr,
+                         mmap->len);
+                    // pmm_init_region(mmap->addr, mmap->len / 1024);
                 }
 
             break;
@@ -47,7 +47,28 @@ void kmain(uint64_t* multiboot_information) {
 
     klog(LOG_MESSAGE_ERROR, "error message test\n");
     klog(LOG_MESSAGE_WARN, "warning message test\n");
+
+    // Gotta find a more sane way of iterating over the multiboot tags
+    /*struct multiboot_tag* t = (struct multiboot_tag*) (multiboot_information + 8);
+
+    while (1) {
+        if (t->type == MULTIBOOT_TAG_TYPE_BASIC_MEMINFO) {
+            pmm_init(1024 + ((struct multiboot_tag_basic_meminfo*) t)->mem_upper);
+            klog(LOG_MESSAGE_DEBUG, "PMM initialized\n");
+
+            break;
+        }
+
+        t = (struct multiboot_tag*) ((multiboot_uint8_t*) t + ((t->size + 7) & ~7));
+    }*/
+
     print_multiboot_information(multiboot_information);
+
+    /*void* frame = pmm_alloc_block();
+    klog(LOG_MESSAGE_DEBUG, "address returned from `pmm_alloc_frame`: %x\n", frame);
+
+    void* f2 = pmm_alloc_block();
+    klog(LOG_MESSAGE_DEBUG, "address returned from `pmm_alloc_frame`: %x\n", f2);*/
 
     char cmd_buffer[128] = "";
     size_t cmd_buffer_idx;
