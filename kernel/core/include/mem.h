@@ -6,8 +6,8 @@
 #define PMM_BLOCK_SIZE 4096
 #define PMM_ACCESS_UNIT_LENGTH 8
 
-// Initialize global state for PMM
-void pmm_init(size_t mem_size);
+// Initialize global state & initialize PMM at `base_address` (the top of the kernel's stack)
+void pmm_init(void* base_address, size_t mem_size);
 
 // Initialize a region of `size` pages of memory
 // Returns a pointer to `base_addr`.

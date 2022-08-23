@@ -28,8 +28,8 @@ void print_multiboot_information(uint64_t* multiboot_information) {
                                                    ((struct multiboot_tag_mmap*) t)->entry_size))
                 if (mmap->type == MULTIBOOT_MEMORY_AVAILABLE) {
                     klog(LOG_MESSAGE_DEBUG,
-                         "memory region from multiboot struct: addr = %x, len = %d\n", mmap->addr,
-                         mmap->len);
+                         "memory region from multiboot struct: addr = %x, len = %d\n at %x",
+                         mmap->addr, mmap->len, mmap);
                     // pmm_init_region(mmap->addr, mmap->len / 1024);
                 }
 
@@ -42,7 +42,7 @@ void print_multiboot_information(uint64_t* multiboot_information) {
     }
 }
 
-void kmain(uint64_t* multiboot_information) {
+void kmain(uint64_t* multiboot_information, uint64_t addr) {
     vga_initialize();
 
     klog(LOG_MESSAGE_ERROR, "error message test\n");
@@ -72,6 +72,8 @@ void kmain(uint64_t* multiboot_information) {
 
     char cmd_buffer[128] = "";
     size_t cmd_buffer_idx;
+
+    pmm_init((void*) addr, 123);
 
     // Enter shell loop
     for (;;) {

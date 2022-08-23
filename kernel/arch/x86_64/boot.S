@@ -6,6 +6,7 @@ bits 32
     start:
         mov esp, stack_top
         mov edi, ebx
+        mov esi, stack_top
 
         call check_multiboot
         call check_cpuid
