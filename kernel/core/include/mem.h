@@ -3,8 +3,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define PMM_ACCESS_UNIT_LENGTH 32
 #define PMM_BLOCK_SIZE 4096
-#define PMM_ACCESS_UNIT_LENGTH 8
 
 // Initialize global state & initialize PMM at `base_address` (the top of the kernel's stack)
 void pmm_init(void* base_address, size_t mem_size);

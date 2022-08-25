@@ -149,6 +149,8 @@ section .bss
 
     stack_top:
 
+    pmm_addr:
+
 section .rodata
     gdt64:
         dq 0
