@@ -33,7 +33,7 @@ void pmm_init(void* base_address, size_t memory_size) {
 
     memset(pmm_map, 0xFF, map_len / PMM_ACCESS_UNIT_LENGTH);
 
-    pmm_set_frame(1);
+    pmm_set_frame(0);
 }
 
 void* pmm_init_region(uint64_t base_addr, size_t size) {

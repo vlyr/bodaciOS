@@ -56,16 +56,8 @@ void kmain(uint64_t* multiboot_information, uint64_t addr) {
 
     print_multiboot_information(multiboot_information);
 
-    void* frame = pmm_alloc_block();
-    klog(LOG_MESSAGE_DEBUG, "address returned from `pmm_alloc_frame`: %x\n", frame);
+    char* cmd_buffer = pmm_alloc_block();
 
-    void* f2 = pmm_alloc_block();
-    klog(LOG_MESSAGE_DEBUG, "address returned from `pmm_alloc_frame`: %x\n", f2);
-
-    void* f3 = pmm_alloc_block();
-    klog(LOG_MESSAGE_DEBUG, "address returned from `pmm_alloc_frame`: %x\n", f3);
-
-    char cmd_buffer[128] = "";
     size_t cmd_buffer_idx;
 
     // Enter shell loop
