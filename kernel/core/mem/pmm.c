@@ -27,13 +27,15 @@ static int pmm_get_first_free() {
     return -1;
 }
 
-void pmm_init(void* base_address, size_t memory_size) {
+void* pmm_init(void* base_address, size_t memory_size) {
     map_len = (memory_size * 1024) / PMM_BLOCK_SIZE;
     pmm_map = (uint32_t*) base_address + map_len / PMM_ACCESS_UNIT_LENGTH;
 
     memset(pmm_map, 0xFF, map_len / PMM_ACCESS_UNIT_LENGTH);
 
     pmm_set_frame(0);
+
+    return pmm_map;
 }
 
 void* pmm_init_region(uint64_t base_addr, size_t size) {

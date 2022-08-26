@@ -7,7 +7,7 @@
 #include <keyboard.h>
 #include <mem.h>
 
-void print_multiboot_information(uint64_t* multiboot_information) {
+void parse_multiboot(uint64_t* multiboot_information) {
     size_t offset = 8;
     struct multiboot_tag* t = (struct multiboot_tag*) (multiboot_information + offset);
 
@@ -37,8 +37,10 @@ void print_multiboot_information(uint64_t* multiboot_information) {
     }
 }
 
-void kmain(uint64_t* multiboot_information, uint64_t addr) {
+void kmain(uint64_t* multiboot_information, uint64_t pmm_base_addr, uint64_t kernel_start) {
     vga_initialize();
+
+    void* kernel_end;
 
     klog(LOG_MESSAGE_ERROR, "error message test\n");
     klog(LOG_MESSAGE_WARN, "warning message test\n");
@@ -47,14 +49,20 @@ void kmain(uint64_t* multiboot_information, uint64_t addr) {
 
     while (1) {
         if (t->type == MULTIBOOT_TAG_TYPE_BASIC_MEMINFO) {
-            pmm_init((void*) addr, ((struct multiboot_tag_basic_meminfo*) t)->mem_upper + 1024);
+            kernel_end = pmm_init((void*) pmm_base_addr,
+                                  ((struct multiboot_tag_basic_meminfo*) t)->mem_upper + 1024);
             break;
         }
 
         t = (struct multiboot_tag*) ((multiboot_uint8_t*) t + ((t->size + 7) & ~7));
     }
 
-    print_multiboot_information(multiboot_information);
+    parse_multiboot(multiboot_information);
+
+    // Mark the kernel as reserved memory.
+    pmm_deinit_region(kernel_start, (size_t) (kernel_end - kernel_start));
+
+    klog(LOG_MESSAGE_DEBUG, "kernel_start = %d, kernel_end = %d\n", kernel_start, kernel_end);
 
     char* cmd_buffer = pmm_alloc_block();
 

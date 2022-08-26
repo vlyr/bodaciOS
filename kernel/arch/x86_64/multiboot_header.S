@@ -1,4 +1,8 @@
+global kernel_start
+
 section .multiboot_header
+kernel_start:
+
 header_start:
     align 8
     dd 0xE85250D6
