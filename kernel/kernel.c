@@ -86,6 +86,15 @@ void kmain(uint64_t* multiboot_information, uint64_t pmm_base_addr, uint64_t ker
                 cmd_buffer_idx = 0;
 
                 continue;
+            } else if (keycode == KEYBOARD_KEY_BACKSPACE_PRESSED) {
+                vga_backspace();
+
+                if (cmd_buffer_idx > 0) {
+                    cmd_buffer_idx--;
+                    cmd_buffer[cmd_buffer_idx] = ' ';
+                }
+
+                continue;
             }
 
             cmd_buffer[cmd_buffer_idx] = keycode;

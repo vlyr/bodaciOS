@@ -34,6 +34,19 @@ void vga_newline() {
     vga_col = 0;
 }
 
+void vga_backspace() {
+    if (vga_col == 0) {
+        return;
+    }
+
+    vga_col--;
+
+    size_t idx = vga_row * VGA_WIDTH + vga_col;
+
+    vga_color_t black = vga_entry_color(VGA_COLOR_BLACK, VGA_COLOR_BLACK);
+    VGA_BUFFER[idx] = vga_entry(' ', black);
+}
+
 void vga_print_char(unsigned char c, vga_color_t color) {
     if (vga_col + 1 > VGA_WIDTH) {
         vga_col = 0;
