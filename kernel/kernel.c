@@ -62,7 +62,7 @@ void kmain(uint64_t* multiboot_information, uint64_t pmm_base_addr, uint64_t ker
     // Mark the kernel as reserved memory.
     pmm_deinit_region(kernel_start, (size_t) (kernel_end - kernel_start));
 
-    klog(LOG_MESSAGE_DEBUG, "kernel_start = %d, kernel_end = %d\n", kernel_start, kernel_end);
+    klog(LOG_MESSAGE_DEBUG, "kernel_start = 0x%x, kernel_end = 0x%x\n", kernel_start, kernel_end);
 
     char* cmd_buffer = pmm_alloc_block();
 
