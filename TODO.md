@@ -1,4 +1,5 @@
 # TODO
+- [ ] Paging and virtual memory
 - [ ] Move VGA cursor
 - [ ] IDT
 - [ ] Keyboard driver | Support for special characters and other keyboard keys
@@ -7,3 +8,4 @@
 - [x] Keyboard driver | Translate raw key data to ASCII characters
 - [x] Formatted printing
 - [x] Call global constructors
+- [x] Physical memory manager
