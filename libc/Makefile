@@ -11,6 +11,7 @@ clean:
 	@rm -r ../build
 
 prepare:
+	@rm -r ../build
 	@mkdir -p $(build_dir)
 
 # libc
