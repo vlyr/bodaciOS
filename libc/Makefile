@@ -11,10 +11,9 @@ clean:
 	@rm -r ../build
 
 prepare:
-	@rm -r ../build
 	@mkdir -p $(build_dir)
 
 # libc
 %.o: %.c prepare
 	@mkdir -p $(shell dirname $@)
-	@$(cc) -MD -c $< -o $(build_dir)/$(notdir $@) -std=gnu11 -ffreestanding -Wall -Wextra -Iinclude
+	@$(cc) -MD -c $< -o $(build_dir)/$(notdir $@) -std=gnu11 -ffreestanding -Wall -Wextra -lgcc -static-libgcc -Iinclude

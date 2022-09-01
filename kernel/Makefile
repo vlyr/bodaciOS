@@ -1,5 +1,8 @@
 arch ?= x86_64
+
 cc := $(arch)-elf-gcc
+linker := $(arch)-elf-ld
+
 kernel := ../build/kernel-$(arch).bin
 iso := ../build/os-$(arch).iso
 linker_script := arch/$(arch)/linker.ld
@@ -43,7 +46,7 @@ $(iso): prepare all
 	@rm -r $(iso_dir)
 
 link:
-	@x86_64-elf-ld -n -o ../build/kernel-$(arch).bin -T $(linker_script) $(build_dir)/crt/crti.o \
+	@$(linker) -n -o ../build/kernel-$(arch).bin -T $(linker_script) $(build_dir)/crt/crti.o \
 		$(crtibegin_obj) \
 		$(wildcard $(build_dir)/*.o) \
 		$(crtend_obj) \
